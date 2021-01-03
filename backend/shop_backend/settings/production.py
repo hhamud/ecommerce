@@ -28,3 +28,10 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:8000',
     'https://immense-lowlands-67291.herokuapp.com',
 ]
+
+cloudinary.config(
+  cloud_name = os.environ.get('CLOUD_NAME'),
+  api_key = os.environ.get('API_KEY'),
+  api_secret = os.environ.get('API_SECRET'),
+  secure = True
+)
