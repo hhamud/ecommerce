@@ -1,0 +1,1 @@
+web: gunicorn --pythonpath backend shop_backend.wsgi
