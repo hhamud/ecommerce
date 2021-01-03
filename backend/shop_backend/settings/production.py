@@ -1,6 +1,7 @@
 from .base import *
 import os
 import environ
+import cloudinary
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -29,7 +30,7 @@ CORS_ALLOWED_ORIGINS = [
     'https://immense-lowlands-67291.herokuapp.com',
 ]
 
-cloudinary.config(
+CLOUDINARY_STORAGE = (
   cloud_name = os.environ.get('CLOUD_NAME'),
   api_key = os.environ.get('API_KEY'),
   api_secret = os.environ.get('API_SECRET'),
