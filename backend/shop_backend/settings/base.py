@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'shop_api',
     'cloudinary',
+    'phonenumber_field',
 
 ]
 
