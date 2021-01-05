@@ -5,7 +5,7 @@ from .models import *
 
 @admin.register(User)
 class MainUserAdmin(UserAdmin):
-    exclude = ['slug', ]
+    pass
 
 
 @admin.register(Order)
@@ -61,8 +61,25 @@ class AddressAdmin(admin.ModelAdmin):
         'post_code'
     ]
 
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    exclude = ['slug', ]
 
-admin.site.register(Product)
+    def get_form(self, request, obj=None, **kwargs):
+        if obj.cloth_type == 'hats':
+            self.exclude = ('shirt_size', 'trouser_size', 'slug', )
+        elif obj.cloth_type == 'shirts':
+            self.exclude = ('hat_size', 'trouser_size', 'slug', )
+        elif obj.cloth_type == 'trousers':
+            self.exclude = ('shirt_size', 'hat_size', 'slug', )
+        form = super(ProductAdmin, self).get_form(request, obj, **kwargs)
+        return form
+
+    
+    
+
+
+
 admin.site.register(Payments)
 admin.site.register(Returns)
 admin.site.register(OrderedProduct)

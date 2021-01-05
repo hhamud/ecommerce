@@ -23,6 +23,12 @@ class Addresschoices(models.TextChoices):
     BILLING_ADDRESS = 'B'
 
 
+class Catagory(models.TextChoices):
+    HATS = 'hats'
+    TROUSERS = 'trousers'
+    SHIRTS = 'shirts'
+
+
 class User(AbstractUser):
     phone_number = PhoneNumberField(max_length=11)
     email_address = models.EmailField()
@@ -45,7 +51,7 @@ class Address(models.Model):
     default_address = models.BooleanField(default=False)
 
     def __str__(self):
-        return '%s %s %s %s %s %s' % (self.home_number, self.street, self.area, self.city, self.post_code, self.country)
+        return '%s, %s, %s, %s, %s, %s' % (self.home_number, self.street, self.area, self.city, self.post_code, self.country)
 
     class Meta:
         verbose_name_plural = 'Addresses'
@@ -63,11 +69,12 @@ class Product(models.Model):
     trouser_size = models.CharField(
         max_length=2, choices=Size.choices, default=Size.MEDIUM)
     slug = models.SlugField(unique=True)
+    cloth_type = models.CharField(
+        max_length=8, choices=Catagory.choices, default=Catagory.SHIRTS)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         super(Product, self).save(*args, **kwargs)
-
 
     def __str__(self):
         return '%s %s' % (self.name, self.price)
@@ -111,8 +118,10 @@ class Order(models.Model):
     payment = models.ForeignKey(Payments, on_delete=models.CASCADE)
     returns_requested = models.BooleanField(default=False)
     returns_granted = models.BooleanField(default=False)
-    shipping_address = models.ForeignKey(Address, related_name="shipping_address", on_delete=models.SET_NULL, blank=True, null=True)
-    billing_address = models.ForeignKey(Address, related_name="billing_address", on_delete=models.SET_NULL, blank=True, null=True)
+    shipping_address = models.ForeignKey(
+        Address, related_name="shipping_address", on_delete=models.SET_NULL, blank=True, null=True)
+    billing_address = models.ForeignKey(
+        Address, related_name="billing_address", on_delete=models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         return self.reference_code
@@ -126,9 +135,9 @@ class Returns(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     reason_return = models.TextField()
     email = models.EmailField(max_length=254)
-    
+
     def __str__(self):
         return "%s" % (self.pk)
-    
+
     class Meta:
         verbose_name_plural = 'Returns'
