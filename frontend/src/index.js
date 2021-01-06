@@ -1,17 +1,38 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React, { Fragment } from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import { ChakraProvider } from "@chakra-ui/react";
+import Header from "./components/Layout/Header";
+import Contact from "./components/Layout/Contact";
+import Footer from "./components/Layout/Footer";
+import Main from "./components/Layout/Main";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Checkout from "./components/Checkout";
+import Login from "./components/Login";
+import Account from "./components/Account";
+
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+  <Router>
+    <ChakraProvider>
+      <Switch>
+        <Route
+          path="/"
+          render={(props) => (
+            <Fragment>
+              <Header />
+              <Main/>
+              <Footer />
+            </Fragment>
+          )}
+        ></Route>
+        <Route path="/shop" component={} />
+        <Route path="/contact" component={Contact} />
+        <Route path="/checkout" component={Checkout} />
+        <Route path="/login" component={Login} />
+        <Route path="/account" component={Account} />
+      </Switch>
+    </ChakraProvider>
+  </Router>,
+  document.getElementById("root")
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
