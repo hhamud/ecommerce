@@ -6,6 +6,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 
 class ProductListView(generics.ListAPIView):
     queryset = Product.objects.all()
+    lookup_field = 'id'
     serializer_class = ProductSerializer
     permission_classes = [AllowAny]
 

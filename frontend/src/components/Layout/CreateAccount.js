@@ -1,12 +1,18 @@
 import React, { Component } from "react";
-import { HStack, Text } from "@chakra-ui/react";
+import { HStack} from "@chakra-ui/react";
+import { Link } from 'react-router-dom'
+
 
 class CreateAccount extends Component {
   render() {
     return (
-      <HStack  bg='black' justify={'flex-end'} spacing={3}>
-        <Text color="white">Login</Text>
-        <Text color="white">Sign up</Text>
+      <HStack  bg='white' justify={'flex-end'} spacing={3}>
+        <Link  color="white" to="/login">
+            Login
+          </Link>
+          <Link  color="white" to="/signup">
+            Sign Up
+          </Link>
       </HStack>
     );
   }

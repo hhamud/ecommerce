@@ -6,7 +6,14 @@ import { Flex, Box, Spacer, Text } from "@chakra-ui/react";
 class Header extends Component {
   render() {
     return (
-      <Box boxShadow="md" bg="whitesmoke" rounded="lg" position="sticky">
+      <Box
+        boxShadow="md"
+        bg="whitesmoke"
+        rounded="lg"
+        position="fixed"
+        display='block'
+        width='100vw'
+      >
         <Box>
           <CreateAccount />
         </Box>

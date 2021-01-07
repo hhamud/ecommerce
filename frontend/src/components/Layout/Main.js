@@ -8,10 +8,12 @@ class Main extends Component {
       <Box
         backgroundImage={`url(${mainimage})`}
         h="100vh"
+        w="100vw"
         bgAttachment="fixed"
-        bgPos="fixed"
+        bgPos="center"
         bgRepeat="no-repeat"
         bgSize="cover"
+        zIndex={-1}
       ></Box>
     );
   }
