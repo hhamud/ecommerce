@@ -16,7 +16,7 @@ class Product extends Component {
 
   render() {
     return (
-      <Grid h="1000px" bg="black">
+      <Grid h="1000px" bg="whitesmoke">
         {this.state.products.map((product) => (
           <Box>
             <Image src={product.image} alt=""></Image>

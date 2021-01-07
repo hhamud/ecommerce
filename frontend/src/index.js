@@ -24,6 +24,7 @@ ReactDOM.render(
             <Fragment>
               <Header />
               <Main/>
+              <Product/>
               <Footer />
             </Fragment>
           )}

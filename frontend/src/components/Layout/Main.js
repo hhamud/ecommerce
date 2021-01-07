@@ -7,7 +7,7 @@ class Main extends Component {
     return (
       <Box
         backgroundImage={`url(${mainimage})`}
-        h="500px"
+        h="100vh"
         bgAttachment="fixed"
         bgPos="fixed"
         bgRepeat="no-repeat"
