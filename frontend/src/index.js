@@ -10,6 +10,8 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Checkout from "./components/Checkout";
 import Login from "./components/Login";
 import Account from "./components/Account";
+import Product from "./components/Product";
+
 
 
 ReactDOM.render(
@@ -26,7 +28,7 @@ ReactDOM.render(
             </Fragment>
           )}
         ></Route>
-        <Route path="/shop" component={} />
+        <Route path="/shop" component={Product} />
         <Route path="/contact" component={Contact} />
         <Route path="/checkout" component={Checkout} />
         <Route path="/login" component={Login} />
