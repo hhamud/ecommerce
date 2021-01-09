@@ -5,7 +5,22 @@ from .models import *
 
 @admin.register(User)
 class MainUserAdmin(UserAdmin):
-    pass
+    fieldsets = (
+        (None, {'fields': ('email_address', 'password')}),
+        (('Personal info'), {'fields': ('first_name', 'last_name')}),
+        (('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
+                                       'groups', 'user_permissions')}),
+        (('Important dates'), {'fields': ('last_login', 'date_joined')}),
+    )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('email_address', 'password1', 'password2'),
+        }),
+    )
+    list_display = ('email_address', 'first_name', 'last_name', 'is_staff')
+    search_fields = ('email_address', 'first_name', 'last_name')
+    ordering = ('email_address',)
 
 
 @admin.register(Order)
@@ -61,12 +76,15 @@ class AddressAdmin(admin.ModelAdmin):
         'post_code'
     ]
 
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     exclude = ['slug', ]
 
     def get_form(self, request, obj=None, **kwargs):
-        if obj.cloth_type == 'hats':
+        if obj == None:
+            pass
+        elif obj.cloth_type == 'hats' :
             self.exclude = ('shirt_size', 'trouser_size', 'slug', )
         elif obj.cloth_type == 'shirts':
             self.exclude = ('hat_size', 'trouser_size', 'slug', )
@@ -74,10 +92,6 @@ class ProductAdmin(admin.ModelAdmin):
             self.exclude = ('shirt_size', 'hat_size', 'slug', )
         form = super(ProductAdmin, self).get_form(request, obj, **kwargs)
         return form
-
-    
-    
-
 
 
 admin.site.register(Payments)

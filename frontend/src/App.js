@@ -9,8 +9,27 @@ import Checkout from "./components/Checkout";
 import Login from "./components/Login";
 import Account from "./components/Account";
 import Product from "./components/Product";
+import ProductDetail from "./components/ProductDetail";
+import axios from "axios";
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      products: [],
+    };
+  }
+
+  componentDidMount() {
+    const base_url = process.env.REACT_APP_API_ENDPOINT;
+    axios
+      .get(`${base_url}/products/`)
+      .then((res) => {
+        this.setState({ products: res.data });
+      })
+      .catch((err) => console.log(err));
+  }
+
   render() {
     return (
       <Switch>
@@ -19,17 +38,23 @@ class App extends Component {
         <Route path="/checkout" component={Checkout} />
         <Route path="/login" component={Login} />
         <Route path="/account" component={Account} />
-        <Route
-          exact path="/"
-          render={(props) => (
+        <Route exact path="/">
+          <Fragment>
+            <Header />
+            <Main />
+            <Product products={this.state.products} />
+            <Footer />
+          </Fragment>
+        </Route>
+        {this.state.products.map((product, i) => (
+          <Route path={`/${product.slug}`} key={i}>
             <Fragment>
               <Header />
-              <Main />
-              <Product />
+              <ProductDetail ip={product} />
               <Footer />
             </Fragment>
-          )}
-        ></Route>
+          </Route>
+        ))}
       </Switch>
     );
   }

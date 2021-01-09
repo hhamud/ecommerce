@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from phonenumber_field.modelfields import PhoneNumberField
 from django.template.defaultfilters import slugify
 
@@ -28,14 +28,52 @@ class Catagory(models.TextChoices):
     TROUSERS = 'trousers'
     SHIRTS = 'shirts'
 
+class UserManager(BaseUserManager):
+    """Define a model manager for User model with no username field."""
+
+    use_in_migrations = True
+
+    def _create_user(self, email, password, **extra_fields):
+        """Create and save a User with the given email and password."""
+        if not email:
+            raise ValueError('The given email must be set')
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_user(self, email, password=None, **extra_fields):
+        """Create and save a regular User with the given email and password."""
+        extra_fields.setdefault('is_staff', False)
+        extra_fields.setdefault('is_superuser', False)
+        return self._create_user(email, password, **extra_fields)
+
+    def create_superuser(self, email, password, **extra_fields):
+        """Create and save a SuperUser with the given email and password."""
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
+
+        return self._create_user(email, password, **extra_fields)
+
 
 class User(AbstractUser):
+    username = None
     phone_number = PhoneNumberField(max_length=11)
-    email_address = models.EmailField()
+    email_address = models.EmailField(unique=True)
     stripe_customer_id = models.BooleanField(default=False)
+    
+    USERNAME_FIELD = 'email_address'
+    REQUIRED_FIELDS = []
 
+    objects = UserManager() 
     def __str__(self):
-        return self.username
+        return self.email_address
 
 
 class Address(models.Model):
@@ -71,9 +109,17 @@ class Product(models.Model):
     slug = models.SlugField(unique=True)
     cloth_type = models.CharField(
         max_length=8, choices=Catagory.choices, default=Catagory.SHIRTS)
+    inventory = models.IntegerField(default=1)
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
+        if self.cloth_type == 'shirts':
+            slug_name = self.name + self.shirt_size
+        elif self.cloth_type == 'hats':
+            slug_name = self.name + self.hats_size
+        elif self.cloth_type == 'trousers':
+            slug_name = self.name + self.trouser_size
+            
+        self.slug = slugify(slug_name)
         super(Product, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -91,6 +137,9 @@ class OrderedProduct(models.Model):
 
     def total_product_price(self):
         return self.amount * self.Product.price
+
+    def inventory_update(self):
+        return self.Product.inventory - self.amount 
 
 
 class Payments(models.Model):
