@@ -126,6 +126,9 @@ class Product(models.Model):
         return '%s %s' % (self.name, self.price)
 
 
+
+
+
 class OrderedProduct(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     ordered = models.BooleanField(default=False)

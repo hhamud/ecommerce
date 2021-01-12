@@ -8,9 +8,13 @@ import {
   VStack,
   Select,
   Divider,
-  Flex
+  Flex,
+  Button,
+  HStack,
 } from "@chakra-ui/react";
 import axios from "axios";
+import { Link } from 'react-router-dom'
+
 
 class ProductDetail extends Component {
   constructor(props) {
@@ -30,7 +34,6 @@ class ProductDetail extends Component {
       .catch((err) => console.log(err));
   }
   render() {
-    console.log(this.props);
     return (
       <Box
         display="flex"
@@ -39,18 +42,35 @@ class ProductDetail extends Component {
         alignItems="center"
         minH="100vh"
       >
-        <Flex direction={["column", "row"]} spacing='100px' w='60vw'>
-          <Image maxWidth='400px' h='auto' src={this.props.ip.image} />
-          <VStack w='50vw'>
+        <Flex direction={["column", "row"]} spacing="100px" w="60vw">
+          <Image
+            maxW="300px"
+            objectFit="cover"
+            src={this.props.ip.image}
+            alt={this.props.ip.name}
+          />
+          <VStack w="50vw" paddingLeft="30px" paddingTop="30px">
             <Text>{this.props.ip.name}</Text>
             <Stat>
               <StatNumber>£{this.props.ip.price}</StatNumber>
             </Stat>
             <Text>{this.props.ip.description}</Text>
-            <Select placeholder="Size" maxW='10vw'>
-              <option value="option1">option 1</option>
-            </Select>
-            <Divider orientation='horizontal'/>
+            <HStack direction={["row"]}>
+              <Box>
+                <Select placeholder="Size" maxW="5vw" minW="100px">
+                  <option value="option1">option 1</option>
+                </Select>
+              </Box>
+
+             
+              <Box>
+                <Select placeholder="Colour" maxW="5vw" minW="100px">
+                  <option value="Black">Black</option>
+                </Select>
+              </Box>
+            </HStack>
+            <Divider orientation="horizontal" />
+            <Button onClick={() => (console.log('added product to cart'))}> Buy </Button>
           </VStack>
         </Flex>
       </Box>

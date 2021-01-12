@@ -17,6 +17,8 @@ class ProductDetailView(generics.RetrieveAPIView):
     serializer_class = ProductSerializer
     permission_classes = [AllowAny]
 
+    
+
 
 class OrderListView(generics.ListAPIView):
     queryset = Order.objects.all()
