@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import *
-from .serializer import ProductSerializer, OrderedProductsSerializer, OrderSerializer, UserSerializer
+from .serializer import *
 from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAuthenticated 
 
@@ -9,6 +9,7 @@ class ProductListView(generics.ListAPIView):
     lookup_field = 'id'
     serializer_class = ProductSerializer
     permission_classes = [AllowAny]
+    
 
 
 class ProductDetailView(generics.RetrieveAPIView):
@@ -16,8 +17,8 @@ class ProductDetailView(generics.RetrieveAPIView):
     lookup_field = 'id'
     serializer_class = ProductSerializer
     permission_classes = [AllowAny]
-
     
+
 
 
 class OrderListView(generics.ListAPIView):

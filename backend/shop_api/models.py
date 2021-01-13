@@ -28,6 +28,14 @@ class Catagory(models.TextChoices):
     TROUSERS = 'trousers'
     SHIRTS = 'shirts'
 
+
+class Colour(models.TextChoices):
+    BLACK = 'black'
+    WHITE = 'white'
+    BLUE = 'blue'
+    YELLOW = 'yellow'
+
+
 class UserManager(BaseUserManager):
     """Define a model manager for User model with no username field."""
 
@@ -65,15 +73,16 @@ class UserManager(BaseUserManager):
 class User(AbstractUser):
     username = None
     phone_number = PhoneNumberField(max_length=11)
-    email_address = models.EmailField(unique=True)
+    email = models.EmailField(unique=True)
     stripe_customer_id = models.BooleanField(default=False)
-    
-    USERNAME_FIELD = 'email_address'
+
+    USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
-    objects = UserManager() 
+    objects = UserManager()
+
     def __str__(self):
-        return self.email_address
+        return self.email
 
 
 class Address(models.Model):
@@ -95,38 +104,51 @@ class Address(models.Model):
         verbose_name_plural = 'Addresses'
 
 
-class Product(models.Model):
-    name = models.CharField(max_length=50)
+class ProductColour(models.Model):
+    colours = models.CharField(
+        max_length=8, choices=Colour.choices, default=Colour.WHITE)
+    inventory = models.IntegerField(default=1)
     price = models.DecimalField(max_digits=8, decimal_places=2)
-    image = models.ImageField(upload_to='images')
-    description = models.TextField()
+
+    def __str__(self):
+        return '%s %s' % (self.colours, self.inventory)
+    
+
+
+class ProductVariant(models.Model):
+    cloth_type = models.CharField(
+        max_length=8, choices=Catagory.choices, default=Catagory.SHIRTS)
     shirt_size = models.CharField(
         max_length=2, choices=Size.choices, default=Size.MEDIUM)
     hat_size = models.CharField(
         max_length=2, choices=Size.choices, default=Size.MEDIUM)
     trouser_size = models.CharField(
         max_length=2, choices=Size.choices, default=Size.MEDIUM)
+    colours = models.ForeignKey(ProductColour, on_delete=models.CASCADE)
+
+    def __str__(self):
+        if self.cloth_type == 'hats' :
+            return '%s %s' % (self.hat_size, self.colours)
+        elif self.cloth_type == 'shirts':
+            return '%s %s' % (self.shirt_size, self.colours)
+        elif self.cloth_type == 'trousers':
+            return '%s %s' % (self.trouser_size, self.colours)
+       
+
+
+class Product(models.Model):
+    name = models.CharField(max_length=50)
+    image = models.ImageField(upload_to='images')
     slug = models.SlugField(unique=True)
-    cloth_type = models.CharField(
-        max_length=8, choices=Catagory.choices, default=Catagory.SHIRTS)
-    inventory = models.IntegerField(default=1)
+    description = models.TextField()
+    variant = models.ForeignKey(ProductVariant, on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
-        if self.cloth_type == 'shirts':
-            slug_name = self.name + self.shirt_size
-        elif self.cloth_type == 'hats':
-            slug_name = self.name + self.hats_size
-        elif self.cloth_type == 'trousers':
-            slug_name = self.name + self.trouser_size
-            
-        self.slug = slugify(slug_name)
+        self.slug = slugify(self.name)
         super(Product, self).save(*args, **kwargs)
 
     def __str__(self):
-        return '%s %s' % (self.name, self.price)
-
-
-
+        return self.name
 
 
 class OrderedProduct(models.Model):
@@ -142,7 +164,7 @@ class OrderedProduct(models.Model):
         return self.amount * self.Product.price
 
     def inventory_update(self):
-        return self.Product.inventory - self.amount 
+        return self.Product.inventory - self.amount
 
 
 class Payments(models.Model):

@@ -6,7 +6,7 @@ from .models import *
 @admin.register(User)
 class MainUserAdmin(UserAdmin):
     fieldsets = (
-        (None, {'fields': ('email_address', 'password')}),
+        (None, {'fields': ('email', 'password')}),
         (('Personal info'), {'fields': ('first_name', 'last_name')}),
         (('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
                                        'groups', 'user_permissions')}),
@@ -15,12 +15,12 @@ class MainUserAdmin(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email_address', 'password1', 'password2'),
+            'fields': ('email', 'password1', 'password2'),
         }),
     )
-    list_display = ('email_address', 'first_name', 'last_name', 'is_staff')
-    search_fields = ('email_address', 'first_name', 'last_name')
-    ordering = ('email_address',)
+    list_display = ('email', 'first_name', 'last_name', 'is_staff')
+    search_fields = ('email', 'first_name', 'last_name')
+    ordering = ('email',)
 
 
 @admin.register(Order)
@@ -80,16 +80,16 @@ class AddressAdmin(admin.ModelAdmin):
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     exclude = ['slug', ]
-
+    
     def get_form(self, request, obj=None, **kwargs):
         if obj == None:
             pass
-        elif obj.cloth_type == 'hats' :
-            self.exclude = ('shirt_size', 'trouser_size', 'slug', )
-        elif obj.cloth_type == 'shirts':
-            self.exclude = ('hat_size', 'trouser_size', 'slug', )
-        elif obj.cloth_type == 'trousers':
-            self.exclude = ('shirt_size', 'hat_size', 'slug', )
+        elif obj.variant.cloth_type == 'hats' :
+            self.exclude = ('shirt_size', 'trouser_size', )
+        elif obj.variant.cloth_type == 'shirts':
+            self.exclude = ('hat_size', 'trouser_size', )
+        elif obj.variant.cloth_type == 'trousers':
+            self.exclude = ('shirt_size', 'hat_size',)
         form = super(ProductAdmin, self).get_form(request, obj, **kwargs)
         return form
 
@@ -97,3 +97,5 @@ class ProductAdmin(admin.ModelAdmin):
 admin.site.register(Payments)
 admin.site.register(Returns)
 admin.site.register(OrderedProduct)
+admin.site.register(ProductVariant)
+admin.site.register(ProductColour)
