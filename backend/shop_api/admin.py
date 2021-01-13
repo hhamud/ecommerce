@@ -81,17 +81,17 @@ class AddressAdmin(admin.ModelAdmin):
 class ProductAdmin(admin.ModelAdmin):
     exclude = ['slug', ]
     
-    def get_form(self, request, obj=None, **kwargs):
-        if obj == None:
-            pass
-        elif obj.variant.cloth_type == 'hats' :
-            self.exclude = ('shirt_size', 'trouser_size', )
-        elif obj.variant.cloth_type == 'shirts':
-            self.exclude = ('hat_size', 'trouser_size', )
-        elif obj.variant.cloth_type == 'trousers':
-            self.exclude = ('shirt_size', 'hat_size',)
-        form = super(ProductAdmin, self).get_form(request, obj, **kwargs)
-        return form
+    # def get_form(self, request, obj=None, **kwargs):
+    #     if obj == None:
+    #         pass
+    #     elif obj.variant.cloth_type == 'hats' :
+    #         self.exclude = ('shirt_size', 'trouser_size', )
+    #     elif obj.variant.cloth_type == 'shirts':
+    #         self.exclude = ('hat_size', 'trouser_size', )
+    #     elif obj.variant.cloth_type == 'trousers':
+    #         self.exclude = ('shirt_size', 'hat_size',)
+    #     form = super(ProductAdmin, self).get_form(request, obj, **kwargs)
+    #     return form
 
 
 admin.site.register(Payments)

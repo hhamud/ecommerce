@@ -112,7 +112,6 @@ class ProductColour(models.Model):
 
     def __str__(self):
         return '%s %s' % (self.colours, self.inventory)
-    
 
 
 class ProductVariant(models.Model):
@@ -124,16 +123,17 @@ class ProductVariant(models.Model):
         max_length=2, choices=Size.choices, default=Size.MEDIUM)
     trouser_size = models.CharField(
         max_length=2, choices=Size.choices, default=Size.MEDIUM)
-    colours = models.ForeignKey(ProductColour, on_delete=models.CASCADE)
+    colour = models.ManyToManyField(ProductColour)
+
+   
 
     def __str__(self):
-        if self.cloth_type == 'hats' :
-            return '%s %s' % (self.hat_size, self.colours)
+        if self.cloth_type == 'hats':
+            return '%s ' % (self.hat_size)
         elif self.cloth_type == 'shirts':
-            return '%s %s' % (self.shirt_size, self.colours)
+            return '%s ' % (self.shirt_size)
         elif self.cloth_type == 'trousers':
-            return '%s %s' % (self.trouser_size, self.colours)
-       
+            return '%s ' % (self.trouser_size)
 
 
 class Product(models.Model):
@@ -141,7 +141,7 @@ class Product(models.Model):
     image = models.ImageField(upload_to='images')
     slug = models.SlugField(unique=True)
     description = models.TextField()
-    variant = models.ForeignKey(ProductVariant, on_delete=models.CASCADE)
+    variant = models.ManyToManyField(ProductVariant)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)

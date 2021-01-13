@@ -2,14 +2,14 @@ from django.shortcuts import render
 from .models import *
 from .serializer import *
 from rest_framework import generics
-from rest_framework.permissions import AllowAny, IsAuthenticated 
+from rest_framework.permissions import AllowAny, IsAuthenticated
+
 
 class ProductListView(generics.ListAPIView):
     queryset = Product.objects.all()
     lookup_field = 'id'
     serializer_class = ProductSerializer
     permission_classes = [AllowAny]
-    
 
 
 class ProductDetailView(generics.RetrieveAPIView):
@@ -17,8 +17,6 @@ class ProductDetailView(generics.RetrieveAPIView):
     lookup_field = 'id'
     serializer_class = ProductSerializer
     permission_classes = [AllowAny]
-    
-
 
 
 class OrderListView(generics.ListAPIView):
@@ -26,16 +24,8 @@ class OrderListView(generics.ListAPIView):
     serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated]
 
-     
+
 class OrderedProductListView(generics.ListAPIView):
     queryset = OrderedProduct.objects.all()
     serializer_class = OrderedProduct
     permission_classes = [IsAuthenticated]
-
-
-
-
-
-
-
-

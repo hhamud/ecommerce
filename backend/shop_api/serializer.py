@@ -5,32 +5,28 @@ from .models import *
 class ColourSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductColour
-        fields = ("colours",
-                  "inventory",
-                  "price")
+        fields = '__all__'
 
 
 class VariantSerializer(serializers.ModelSerializer):
-    colours = ColourSerializer()
+    colour = ColourSerializer(many=True)
 
     class Meta:
         model = ProductVariant
-        
-        fields = ("cloth_type",
-                  "shirt_size",
-                  "hat_size",
-                  "trouser_size",
-                  "colours")
+        fields = ('cloth_type',
+                  'shirt_size',
+                  'hat_size',
+                  'trouser_size',
+                  'colour')
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    variant = VariantSerializer()
+    variant = VariantSerializer(many=True)
 
     class Meta:
         model = Product
-        fields = '__all__'
+        fields = ('name', 'image', 'description', 'variant')
         lookup = 'slug'
-        
 
 
 class OrderSerializer(serializers.ModelSerializer):
