@@ -27,6 +27,7 @@ class Catagory(models.TextChoices):
     HATS = 'hats'
     TROUSERS = 'trousers'
     SHIRTS = 'shirts'
+    SHOES = 'shoes'
 
 
 class Colour(models.TextChoices):
@@ -117,23 +118,19 @@ class ProductColour(models.Model):
 class ProductVariant(models.Model):
     cloth_type = models.CharField(
         max_length=8, choices=Catagory.choices, default=Catagory.SHIRTS)
-    shirt_size = models.CharField(
-        max_length=2, choices=Size.choices, default=Size.MEDIUM)
-    hat_size = models.CharField(
-        max_length=2, choices=Size.choices, default=Size.MEDIUM)
-    trouser_size = models.CharField(
-        max_length=2, choices=Size.choices, default=Size.MEDIUM)
+    cloth_size = models.CharField(
+        max_length=2, choices=Size.choices, null=True)
     colour = models.ManyToManyField(ProductColour)
+    shoe_size = models.CharField(choices=[
+                                 (x, x) for x in range(0, 13)],  max_length=5, null=True, blank=True)
 
-   
-
-    def __str__(self):
-        if self.cloth_type == 'hats':
-            return '%s ' % (self.hat_size)
-        elif self.cloth_type == 'shirts':
-            return '%s ' % (self.shirt_size)
-        elif self.cloth_type == 'trousers':
-            return '%s ' % (self.trouser_size)
+    # def __str__(self):
+    #     if self.cloth_type == 'hats':
+    #         return self.cloth_size
+    #     elif self.cloth_size == 'shoes':
+    #         return self.shoe_size
+      
+    
 
 
 class Product(models.Model):

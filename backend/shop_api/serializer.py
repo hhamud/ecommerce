@@ -14,9 +14,8 @@ class VariantSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductVariant
         fields = ('cloth_type',
-                  'shirt_size',
-                  'hat_size',
-                  'trouser_size',
+                  'cloth_size',
+                  'shoe_size',
                   'colour')
 
 
