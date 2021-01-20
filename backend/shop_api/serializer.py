@@ -1,22 +1,13 @@
 from rest_framework import serializers
 from .models import *
-
-
-class ColourSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProductColour
-        fields = '__all__'
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
 class VariantSerializer(serializers.ModelSerializer):
-    colour = ColourSerializer(many=True)
 
     class Meta:
         model = ProductVariant
-        fields = ('cloth_type',
-                  'cloth_size',
-                  'shoe_size',
-                  'colour')
+        fields = '__all__'
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -24,7 +15,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ('name', 'image', 'description', 'variant')
+        fields = ('name', 'image', 'description', 'slug', 'variant')
         lookup = 'slug'
 
 
@@ -45,3 +36,13 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = '__all__'
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+
+    @classmethod
+    def get_token(cls, user):
+        token = super(MyTokenObtainPairSerializer, cls).get_token(user)
+
+        # Add custom claims
+        
+        return token

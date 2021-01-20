@@ -13,6 +13,13 @@ import {
 import { Link } from "react-router-dom";
 
 class Product extends React.Component {
+
+  constructor(props) {
+    super(props)
+    console.log(props.products)
+    
+  }
+  
   render() {
     return (
       <Box>
@@ -22,7 +29,7 @@ class Product extends React.Component {
 
         <Wrap h="1000px" padding={4} justify='center'>
           {this.props.products.map((product, i) => (
-            <>
+            <Box>
               <WrapItem padding={4} >
                 <Link to={product.slug} key={i}>
                   <Stack
@@ -43,11 +50,11 @@ class Product extends React.Component {
                       alt={product.name}
                     ></Image>
                     <Text>{product.name}</Text>
-                    <Text>${product.price}</Text>
+                    <Text>${product.variant[0].price}</Text>
                   </Stack>
                 </Link>
               </WrapItem>
-            </>
+            </Box>
           ))}
         </Wrap>
       </Box>

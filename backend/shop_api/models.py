@@ -73,12 +73,12 @@ class UserManager(BaseUserManager):
 
 class User(AbstractUser):
     username = None
-    phone_number = PhoneNumberField(max_length=11)
+    phone_number = PhoneNumberField(max_length=11, null=True, blank=True)
     email = models.EmailField(unique=True)
     stripe_customer_id = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['password', ]
 
     objects = UserManager()
 
@@ -105,32 +105,20 @@ class Address(models.Model):
         verbose_name_plural = 'Addresses'
 
 
-class ProductColour(models.Model):
+class ProductVariant(models.Model):
+    cloth_type = models.CharField(
+        max_length=8, choices=Catagory.choices, default=Catagory.SHIRTS)
+    cloth_size = models.CharField(
+        max_length=2, choices=Size.choices, null=True, blank=True)
+    shoe_size = models.IntegerField(choices=[
+        (x, x) for x in range(0, 13)],  null=True, blank=True)
     colours = models.CharField(
         max_length=8, choices=Colour.choices, default=Colour.WHITE)
     inventory = models.IntegerField(default=1)
     price = models.DecimalField(max_digits=8, decimal_places=2)
 
     def __str__(self):
-        return '%s %s' % (self.colours, self.inventory)
-
-
-class ProductVariant(models.Model):
-    cloth_type = models.CharField(
-        max_length=8, choices=Catagory.choices, default=Catagory.SHIRTS)
-    cloth_size = models.CharField(
-        max_length=2, choices=Size.choices, null=True)
-    colour = models.ManyToManyField(ProductColour)
-    shoe_size = models.CharField(choices=[
-                                 (x, x) for x in range(0, 13)],  max_length=5, null=True, blank=True)
-
-    # def __str__(self):
-    #     if self.cloth_type == 'hats':
-    #         return self.cloth_size
-    #     elif self.cloth_size == 'shoes':
-    #         return self.shoe_size
-      
-    
+        return "%s %s %s %s %s" % (self.cloth_type, self.colours, self.inventory, self.shoe_size, self.cloth_size)
 
 
 class Product(models.Model):

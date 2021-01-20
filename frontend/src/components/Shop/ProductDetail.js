@@ -13,14 +13,13 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { Link } from 'react-router-dom'
-
 
 class ProductDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
       productdetail: [],
+      data: [],
     };
   }
 
@@ -33,7 +32,16 @@ class ProductDetail extends Component {
       })
       .catch((err) => console.log(err));
   }
+  
+
+  AddToCart = () => (
+    this.setState({data: this.props.ip})
+    
+
+  )
+
   render() {
+
     return (
       <Box
         display="flex"
@@ -52,25 +60,40 @@ class ProductDetail extends Component {
           <VStack w="50vw" paddingLeft="30px" paddingTop="30px">
             <Text>{this.props.ip.name}</Text>
             <Stat>
-              <StatNumber>£{this.props.ip.price}</StatNumber>
+              <StatNumber>£{this.props.ip.variant[0].price}</StatNumber>
             </Stat>
             <Text>{this.props.ip.description}</Text>
             <HStack direction={["row"]}>
               <Box>
                 <Select placeholder="Size" maxW="5vw" minW="100px">
-                  <option value="option1">option 1</option>
+                  {this.props.ip.variant.map((product, i) => {
+                    var cloth_type =
+                      product.shoe_size != null
+                        ? product.shoe_size
+                        : product.cloth_size;
+                    return (
+                      <option key={i} value={cloth_type}>
+                        {cloth_type}
+                      </option>
+                    );
+                  })}
                 </Select>
               </Box>
 
-             
               <Box>
                 <Select placeholder="Colour" maxW="5vw" minW="100px">
-                  <option value="Black">Black</option>
+                  {this.props.ip.variant.map((product, i) => (
+                    <option key={i} value={product.colours}>
+                      {product.colours}
+                    </option>
+                  ))}
                 </Select>
               </Box>
             </HStack>
             <Divider orientation="horizontal" />
-            <Button onClick={() => (console.log('added product to cart'))}> Buy </Button>
+            <Button onClick={this.AddToCart}>
+              Add to Cart
+            </Button>
           </VStack>
         </Flex>
       </Box>

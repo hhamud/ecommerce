@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { HStack  , Box } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-
+import Checkout from "../Checkout";
 class Navbar extends Component {
   render() {
     return (
@@ -13,9 +13,7 @@ class Navbar extends Component {
           <Link to="/contact">
             Contact
           </Link>
-          <Link to="/checkout">
-            Checkout
-          </Link>
+          <Checkout/>
         </HStack>
       </Box>
     );
