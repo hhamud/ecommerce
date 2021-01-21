@@ -2,10 +2,10 @@ import axiosInstance from "../auth/AxiosApi";
 
 
 
-const HandleAuth = async () => {
+const AllowAccess = async (event) => {
     try {
-        let response = await axiosInstance.get('/hello/');
-        const message = response.data.hello;
+        let response = await axiosInstance.get('/' + event + '/');
+        const message = response.data.event;
         this.setState({
             message: message,
         });
@@ -16,4 +16,4 @@ const HandleAuth = async () => {
     }
 }
 
-export default HandleAuth
+export default AllowAccess

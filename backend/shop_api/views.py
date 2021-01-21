@@ -49,3 +49,8 @@ class UserCreate(APIView):
                 json = serializer.data
                 return Response(json, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class UserDashboard(generics.RetrieveUpdateAPIView):
+    queryset = User.objects.all 
+    serializer_class = UserSerializer
+    permission_class = [IsAuthenticated]

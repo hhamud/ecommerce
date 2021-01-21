@@ -16,8 +16,7 @@ import {
   FormLabel,
 } from "@chakra-ui/react";
 import axiosInstance from "./AxiosApi";
-import { Link } from 'react-router-dom'
-
+import { Link } from "react-router-dom";
 
 class SignUp extends Component {
   constructor(props) {
@@ -46,8 +45,6 @@ class SignUp extends Component {
 
       return data;
     } catch (error) {
-      console.log(this.state.email, this.state.password);
-
       throw error;
     }
   };

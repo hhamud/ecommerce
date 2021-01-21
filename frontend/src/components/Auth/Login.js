@@ -15,7 +15,7 @@ import {
   FormControl,
   FormLabel,
 } from "@chakra-ui/react";
-import axiosInstance from "./AxiosApi";
+import axiosInstance from "../Auth/AxiosApi";
 import { Link } from "react-router-dom";
 
 class Login extends Component {
