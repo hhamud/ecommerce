@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { HStack  , Box } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import Checkout from "../Checkout";
+import Checkout from "../Shop/Checkout";
 class Navbar extends Component {
   render() {
     return (

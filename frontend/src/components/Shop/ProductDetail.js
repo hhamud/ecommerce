@@ -12,32 +12,20 @@ import {
   Button,
   HStack,
 } from "@chakra-ui/react";
-import axios from "axios";
+
 
 class ProductDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      productdetail: [],
       data: [],
     };
   }
 
-  componentDidMount() {
-    const base_url = process.env.REACT_APP_API_ENDPOINT;
-    axios
-      .get(`${base_url}/products/${this.props.ip.name}`)
-      .then((res) => {
-        this.setState({ productdetail: res.data });
-      })
-      .catch((err) => console.log(err));
-  }
   
 
   AddToCart = () => (
     this.setState({data: this.props.ip})
-    
-
   )
 
   render() {
