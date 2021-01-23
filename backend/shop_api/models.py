@@ -87,15 +87,15 @@ class User(AbstractUser):
 
 
 class Address(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    home_number = models.CharField(max_length=5)
-    street = models.CharField(max_length=20)
-    area = models.CharField(max_length=20)
-    city = models.CharField(max_length=20)
-    post_code = models.CharField(max_length=10)
-    country = models.CharField(max_length=20)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='address')
+    home_number = models.CharField(max_length=5,  null=True, blank=True)
+    street = models.CharField(max_length=20,  null=True, blank=True)
+    area = models.CharField(max_length=20,  null=True, blank=True)
+    city = models.CharField(max_length=20,  null=True, blank=True)
+    post_code = models.CharField(max_length=10,  null=True, blank=True)
+    country = models.CharField(max_length=20,  null=True, blank=True)
     address_type = models.CharField(
-        max_length=1, choices=Addresschoices.choices)
+        max_length=1, choices=Addresschoices.choices,  null=True, blank=True)
     default_address = models.BooleanField(default=False)
 
     def __str__(self):
@@ -154,13 +154,13 @@ class OrderedProduct(models.Model):
 
 class Payments(models.Model):
     user = models.ForeignKey(
-        User, on_delete=models.SET_NULL, blank=True, null=True)
-    amount = models.FloatField()
-    time_stamp = models.DateTimeField(auto_now_add=True)
-    stripe_api_charge = models.CharField(max_length=50)
+        User, on_delete=models.SET_NULL, blank=True, null=True, related_name='payment')
+    amount = models.FloatField( null=True, blank=True)
+    time_stamp = models.DateTimeField(auto_now_add=True,  null=True, blank=True)
+    stripe_api_charge = models.CharField(max_length=50,  null=True, blank=True)
 
     def __str__(self):
-        return self.User.username
+        return self.stripe_api_charge
 
     class Meta:
         verbose_name_plural = 'Payments'

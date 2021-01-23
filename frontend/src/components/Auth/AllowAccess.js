@@ -1,10 +1,10 @@
-import axiosInstance from "../auth/AxiosApi";
+import axiosInstance from "./AxiosApi";
 
 
 
 const AllowAccess = async (event) => {
     try {
-        let response = await axiosInstance.get('/' + event + '/');
+        let response = await axiosInstance.get('/' + event.toString() + '/');
         const message = response.data.event;
         this.setState({
             message: message,

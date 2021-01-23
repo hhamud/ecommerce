@@ -1,22 +1,15 @@
 import React, { Component } from "react";
-import { AtSignIcon, LockIcon } from "@chakra-ui/icons";
 // eslint-disable-next-line no-unused-vars
 import {
-  Stack,
-  Flex,
-  Spacer,
   Box,
   Input,
   InputGroup,
   Button,
-  InputRightElement,
-  InputLeftAddon,
   FormControl,
   FormLabel,
+  SimpleGrid,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
-
-import AllowAccess from "../Auth/AllowAccess";
+import axiosInstance from "../Auth/AxiosApi";
 
 class Account extends Component {
   constructor(props) {
@@ -40,6 +33,35 @@ class Account extends Component {
     };
   }
 
+  AllowAccess = async () => {
+    try {
+      let id = this.props.location.state.user_id;
+      let response = await axiosInstance.get(`/account/${id}/details/`);
+      const message = response.data;
+      this.setState({
+        first_name: message.first_name,
+        last_name: message.last_name,
+        phone_number: message.phone_number,
+        home_number: message.home_number,
+        street: message.street,
+        area: message.area,
+        city: message.city,
+        post_code: message.post_code,
+        country: message.country,
+        address_type: message.address_type,
+        default_address: message.default_address,
+      });
+      return message;
+    } catch (error) {
+      console.log("Error: ", JSON.stringify(error, null, 4));
+      throw error;
+    }
+  };
+
+  componentDidMount() {
+    this.AllowAccess();
+  }
+
   render() {
     return (
       <Box
@@ -49,10 +71,8 @@ class Account extends Component {
         alignItems="center"
         minH="100vh"
       >
-        <Stack
-          direction={["row", "column"]}
-          w="400px"
-          h="300px"
+        <SimpleGrid
+          columns={{ sm: 1, md: 2, lg: 3 }}
           boxShadow="lg"
           justify="center"
           rounded="lg"
@@ -67,6 +87,7 @@ class Account extends Component {
               <FormLabel>First Name</FormLabel>
               <InputGroup>
                 <Input
+                  placeholder={this.state.first_name}
                   type="text"
                   borderLeftRadius="0"
                   value={this.state.first_name}
@@ -82,6 +103,7 @@ class Account extends Component {
               <FormLabel>Last Name</FormLabel>
               <InputGroup>
                 <Input
+                  placeholder={this.state.last_name}
                   type="text"
                   borderLeftRadius="0"
                   value={this.state.last_name}
@@ -95,6 +117,7 @@ class Account extends Component {
               <FormLabel>Phone Number</FormLabel>
               <InputGroup>
                 <Input
+                  placeholder={this.state.phone_number}
                   type="phonenumber"
                   borderLeftRadius="0"
                   value={this.state.phone_number}
@@ -110,6 +133,7 @@ class Account extends Component {
               <FormLabel>House Number</FormLabel>
               <InputGroup>
                 <Input
+                  placeholder={this.state.home_number}
                   type="number"
                   borderLeftRadius="0"
                   value={this.state.home_number}
@@ -125,12 +149,11 @@ class Account extends Component {
               <FormLabel>Street</FormLabel>
               <InputGroup>
                 <Input
+                  placeholder={this.state.street}
                   type="text"
                   borderLeftRadius="0"
                   value={this.state.street}
-                  onChange={(e) =>
-                    this.setState({ street: e.target.value })
-                  }
+                  onChange={(e) => this.setState({ street: e.target.value })}
                 />
               </InputGroup>
             </FormControl>
@@ -140,12 +163,11 @@ class Account extends Component {
               <FormLabel>Area</FormLabel>
               <InputGroup>
                 <Input
+                  placeholder={this.state.area}
                   type="text"
                   borderLeftRadius="0"
                   value={this.state.area}
-                  onChange={(e) =>
-                    this.setState({ area: e.target.value })
-                  }
+                  onChange={(e) => this.setState({ area: e.target.value })}
                 />
               </InputGroup>
             </FormControl>
@@ -155,12 +177,11 @@ class Account extends Component {
               <FormLabel>City</FormLabel>
               <InputGroup>
                 <Input
+                  placeholder={this.state.city}
                   type="text"
                   borderLeftRadius="0"
                   value={this.state.city}
-                  onChange={(e) =>
-                    this.setState({ city: e.target.value })
-                  }
+                  onChange={(e) => this.setState({ city: e.target.value })}
                 />
               </InputGroup>
             </FormControl>
@@ -170,12 +191,11 @@ class Account extends Component {
               <FormLabel>Country</FormLabel>
               <InputGroup>
                 <Input
+                  placeholder={this.state.country}
                   type="text"
                   borderLeftRadius="0"
                   value={this.state.country}
-                  onChange={(e) =>
-                    this.setState({ country: e.target.value })
-                  }
+                  onChange={(e) => this.setState({ country: e.target.value })}
                 />
               </InputGroup>
             </FormControl>
@@ -185,17 +205,25 @@ class Account extends Component {
               <FormLabel>Post Code</FormLabel>
               <InputGroup>
                 <Input
+                  placeholder={this.state.post_code}
                   type="text"
                   borderLeftRadius="0"
                   value={this.state.post_code}
-                  onChange={(e) =>
-                    this.setState({ post_code: e.target.value })
-                  }
+                  onChange={(e) => this.setState({ post_code: e.target.value })}
                 />
               </InputGroup>
             </FormControl>
           </Box>
-        </Stack>
+          <Button
+            type="submit"
+            loadingText="Logging in"
+            colorScheme="teal"
+            variant="outline"
+            maxW="100px"
+          >
+            Submit
+          </Button>
+        </SimpleGrid>
       </Box>
     );
   }

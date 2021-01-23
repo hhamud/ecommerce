@@ -3,6 +3,31 @@ from .models import *
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
+class PaymentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Payments
+        fields = '__all__'
+
+
+class AddressSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Address
+        fields = '__all__'
+
+
+class UserSerializer(serializers.ModelSerializer):
+    address = AddressSerializer(many=True)
+    payment = PaymentSerializer(many=True)
+
+    class Meta:
+        model = User
+        lookup = 'user'
+        fields = ('email', 'first_name', 'last_name',
+                  'phone_number', 'address', 'payment')
+
+
 class VariantSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -32,17 +57,12 @@ class OrderedProductsSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = '__all__'
-
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
     @classmethod
     def get_token(cls, user):
         token = super(MyTokenObtainPairSerializer, cls).get_token(user)
 
-        # Add custom claims
-        
+        token['user_id'] = user.id
+
         return token

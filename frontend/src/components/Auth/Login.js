@@ -2,6 +2,7 @@
 import React, { Component } from "react";
 import { AtSignIcon, LockIcon } from "@chakra-ui/icons";
 // eslint-disable-next-line no-unused-vars
+import jwt_decode from "jwt-decode";
 import {
   VStack,
   Flex,
@@ -16,7 +17,7 @@ import {
   FormLabel,
 } from "@chakra-ui/react";
 import axiosInstance from "../Auth/AxiosApi";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
 class Login extends Component {
   constructor(props) {
@@ -25,6 +26,8 @@ class Login extends Component {
       show: false,
       email: "",
       password: "",
+      login: false,
+      user_id: "",
     };
   }
 
@@ -36,20 +39,39 @@ class Login extends Component {
         password: this.state.password,
       });
 
-      //check first if response has what you need => then do your stuff
-
       axiosInstance.defaults.headers["Authorization"] =
         "JWT " + response.data.access;
       localStorage.setItem("access_token", response.data.access);
       localStorage.setItem("refresh_token", response.data.refresh);
+      const decoded_token = jwt_decode(response.data.access);
+      const token_id = decoded_token["user_id"];
 
+      if (token_id) {
+        this.setState({ login: true, user_id: token_id });
+      }
       return data;
     } catch (error) {
-      throw error;
+      try {
+        if (error.response.status === 401) {
+          document.getElementById(
+            "Email Address-label"
+          ).innerHTML = "Email Address: Login Incorrect".fontcolor("red");
+        }
+      } catch (error) {
+        
+      }
     }
   };
 
   render() {
+    if (this.state.login === true) {
+      return (
+        <Redirect
+          to={{ pathname: `/account/`, state: { user_id: this.state.user_id } }}
+        />
+      );
+    }
+
     return (
       <Box
         display="flex"
