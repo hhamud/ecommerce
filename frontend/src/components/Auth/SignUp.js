@@ -1,7 +1,6 @@
-/* eslint-disable no-undef */
 import React, { Component } from "react";
 import { AtSignIcon, LockIcon } from "@chakra-ui/icons";
-// eslint-disable-next-line no-unused-vars
+
 import jwt_decode from "jwt-decode";
 import {
   VStack,
@@ -26,6 +25,7 @@ class SignUp extends Component {
       show: false,
       email: "",
       password: "",
+      password_repeat: "",
       login: false,
       user_id: "",
     };
@@ -51,9 +51,26 @@ class SignUp extends Component {
       }
       return data;
     } catch (error) {
-      throw error
+      try {
+        if (error.response.status === 401) {
+          document.getElementById(
+            "Email Address-label"
+          ).innerHTML = "Email Address: Login Incorrect".fontcolor("red");
+        }
+      } catch (error) {
+        
+      }
     }
   };
+
+
+  check_passwords = () => (
+    this.state.password === this.state.password_repeat
+      ? this.handleSubmit
+      : (document.getElementById(
+          "Password-label"
+        ).innerHTML = "Passwords do not match".fontcolor("red"))
+  )
 
   render() {
     if (this.state.login === true) {
@@ -82,7 +99,6 @@ class SignUp extends Component {
           padding={4}
           spacing={3}
           as={"form"}
-          onSubmit={this.handleSubmit}
         >
           <Box>
             <FormControl id="Email Address" isRequired>
@@ -133,16 +149,50 @@ class SignUp extends Component {
               </InputGroup>
             </FormControl>
           </Box>
+          <Box>
+            <FormControl id="Password_repeat" isRequired>
+              <FormLabel>Repeat Password</FormLabel>
+              <InputGroup size="md">
+                <InputLeftAddon
+                  pointerEvents="none"
+                  children={<LockIcon color="gray.300" />}
+                />
+                <Input
+                  pr="4.5rem"
+                  type={this.state.show ? "text" : "password"}
+                  placeholder="Enter password again"
+                  value={this.state.password_repeat}
+                  onChange={(e) =>
+                    this.setState({ password_repeat: e.target.value })
+                  }
+                />
+                <InputRightElement width="4.5rem">
+                  <Button
+                    h="1.75rem"
+                    size="sm"
+                    onClick={() =>
+                      this.setState((PrevState) => ({
+                        show: !PrevState.show,
+                      }))
+                    }
+                  >
+                    {this.state.show ? "Hide" : "Show"}
+                  </Button>
+                </InputRightElement>
+              </InputGroup>
+            </FormControl>
+          </Box>
           <Flex align="center">
             <Link to="/">Forgot Password?</Link>
             <Spacer />
             <Button
+              onClick={this.check_passwords}
               type="submit"
               loadingText="Logging in"
               colorScheme="teal"
               variant="outline"
             >
-              SignUp
+              Signup
             </Button>
           </Flex>
         </VStack>

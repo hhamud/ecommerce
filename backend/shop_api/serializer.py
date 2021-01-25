@@ -18,13 +18,30 @@ class AddressSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    address = AddressSerializer(many=True)
-    payment = PaymentSerializer(many=True)
+    address = AddressSerializer(many=True, required=False)
+    payment = PaymentSerializer(many=True, required=False)
+
+    def create(self, validated_data):
+
+        if "address" in validated_data and "payment" in validated_data:
+            address_data = validated_data.pop('address')
+            payment_data = validated_data.pop('payment')
+            user = User.objects.create(**validated_data)
+
+            for payment in payment_data:
+                Payments.objects.create(user=user, **payment)
+
+            for address in address_data:
+                Address.objects.create(user=user, **address)
+
+            return user
+        else:
+            return User.objects.create(**validated_data)
 
     class Meta:
         model = User
         lookup = 'user'
-        fields = ('email', 'first_name', 'last_name',
+        fields = ('id', 'email', 'password', 'first_name', 'last_name',
                   'phone_number', 'address', 'payment')
 
 
